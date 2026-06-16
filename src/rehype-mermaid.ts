@@ -1,5 +1,5 @@
 import type { Element, ElementContent, Root } from 'hast'
-import type { CreateMermaidRendererOptions, RenderOptions, RenderResult } from 'mermaid-isomorphic'
+import type { CreateMermaidRendererOptions, RenderOptions, RenderResult, MermaidRenderer } from 'mermaid-isomorphic'
 import type { Plugin } from 'unified'
 import type { VFile } from 'vfile'
 
@@ -294,6 +294,11 @@ export interface RehypeMermaidOptions
    * @default 'inline-svg'
    */
   strategy?: Strategy
+
+  /**
+    * Mermaid renderer to use, create one from mermaid-isomorphic::createMermaidRenderer
+    */
+  renderer?: MermaidRenderer
 }
 
 /**
@@ -305,7 +310,7 @@ export interface RehypeMermaidOptions
  */
 const rehypeMermaid: Plugin<[RehypeMermaidOptions?], Root> = (options) => {
   const strategy = validateStrategy(options?.strategy)
-  const renderDiagrams = createMermaidRenderer(options)
+  const renderDiagrams = options?.renderer ?? createMermaidRenderer(options)
   let colorScheme = options?.colorScheme
 
   return (ast, file) => {
